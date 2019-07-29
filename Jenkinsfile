@@ -3,7 +3,7 @@ label 'slave 1'
     withMaven(maven:'maven') {
 
         stage('Checkout') {
-            git url: 'https://github.com/arunjohnsonthinkpalm/demo.git', credentialsId: 'myid', branch: 'test'
+            git url: 'https://github.com/arunjohnsonthinkpalm/demo.git', credentialsId: 'myid', branch: 'master'
         }
 
 		stage('Build') {
