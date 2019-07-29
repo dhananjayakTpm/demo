@@ -7,32 +7,31 @@ label 'slave 1'
         }
 
 		stage('Build') {
-		    sh 'mvn clean install'
+            bat 'mvn package shade:shade'
             def pom = readMavenPom file:'pom.xml'
             env.version = pom.version
         }
 
         stage('Image') {
-                sh 'docker stop demo || true && docker rm demo || true'
-                cmd = "docker rmi demo:${env.version} || true"
-                sh cmd
-                docker.build "demo:${env.version}"
+                bat 'docker stop demo || exit 0'
+				bat 'docker rm demo || exit 0'
+                cmd = "docker rmi demo:${env.version} || exit 0"
+                bat cmd
+                bat "docker build -t demo:${env.version} ."
+            
         }
 
         stage ('Run') {
          if ("${params.RunType}" == "DRY_RUN") {
-              docker.image("demo:${env.version}").run(' -h demo --name demo --net host').withRun( '--arg1 DRY_RUN ')
-              
-                
+	   		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} DRY_RUN"
           }
           else if("${params.RunType}" == "RUN") {
-            docker.image("demo:${env.version}").run(' -h demo --name demo --net host')
+	   		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} RUN"
           }
           else if("${params.RunType}" == "FULL_RUN") {
-            docker.image("demo:${env.version}").run(' -h demo --name demo --net host')
+	   		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} FULL_RUN"
           }
         
-            docker.image("demo:${env.version}").run(' -h demo --name demo --net host')
         }
 
     }
