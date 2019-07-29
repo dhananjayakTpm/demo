@@ -22,7 +22,6 @@ label 'slave 1'
         }
 
         stage ('Run') {
-        echo 
         
          if ("${params.Mode}" == "DRY_RUN") {
        		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} DRY_RUN"
