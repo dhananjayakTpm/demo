@@ -7,7 +7,7 @@ label 'slave 1'
         }
 
 		stage('Build') {
-            bat 'mvn package shade:shade'
+            bat 'mvn clean install'
             def pom = readMavenPom file:'pom.xml'
             env.version = pom.version
         }
