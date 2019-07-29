@@ -22,15 +22,18 @@ label 'slave 1'
         }
 
         stage ('Run') {
-         if ("${params.RunType}" == "DRY_RUN") {
-	   		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} DRY_RUN"
+        echo 
+        
+         if ("${params.Mode}" == "DRY_RUN") {
+       		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} DRY_RUN"
           }
-          else if("${params.RunType}" == "RUN") {
+          else if("${params.Mode}" == "RUN") {
 	   		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} RUN"
           }
-          else if("${params.RunType}" == "FULL_RUN") {
+          else if("${params.Mode}" == "FULL_RUN") {
 	   		 bat "docker run -p 8081:8081 -h restassured --name restassured --net host -m=500m restassured:${env.version} FULL_RUN"
           }
+          
         
         }
 
